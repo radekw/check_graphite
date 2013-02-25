@@ -54,6 +54,7 @@ graphite.add_option("H", "hostname", "Host name to use in the URL")
 graphite.add_option("n", "none", "Ignore None values: 'yes' or 'no' (default no)")
 graphite.add_option("f", "function", "Function to run on retrieved values: avg/min/max/last/sum (default 'avg')",
   default="avg")
+graphite.add_option("a", "alias", "Alias for alert name")
 
 graphite.enable_status("warning")
 graphite.enable_status("critical")
@@ -96,6 +97,9 @@ if len(values) == 0:
   graphite.unknown_error("Graphite returned an empty list of values")
 else:
   value = functionmap[graphite.options.function]["function"](values)
+
+if graphite.options.alias:
+    counter = graphite.options.alias
 
 graphite.set_value(counter, value)
 graphite.set_status_message("%s value of %s: %f" % (functionmap[graphite.options.function]["label"], counter, value))
